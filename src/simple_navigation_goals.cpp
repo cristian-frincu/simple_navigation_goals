@@ -28,6 +28,7 @@ void split_line(string& line, string delim, list<string>& values)
 
 
 
+
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 
@@ -49,8 +50,10 @@ int main(int argc, char** argv){
 
 
     ROS_INFO("Reading CSV File");
-ifstream file ( "file.csv" );
- string value;
+    double goals[10][3];
+	
+    ifstream file ( "file.csv" );
+    string value;
     list<string> values;
     while ( file.good() )
     {
@@ -64,12 +67,16 @@ ifstream file ( "file.csv" );
 
     list<string>::const_iterator it = values.begin();
     int selector=0;
+    int i =0;
     for (it = values.begin(); it != values.end(); it++) {
         string tmp = *it;
-        selector++;
+	selector = selector % 3;
         double d;
-        d = strtod(tmp.c_str(), NULL);
+        goals[i][selector]=d;
+	d = strtod(tmp.c_str(), NULL);
 	ROS_INFO("%f",d);
+	i++;
+        selector++;
     }
 
 
