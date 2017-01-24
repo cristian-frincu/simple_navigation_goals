@@ -27,8 +27,6 @@ void split_line(string& line, string delim, list<string>& values)
 }
 
 
-
-
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 
@@ -75,18 +73,20 @@ int main(int argc, char** argv){
         goals[i][selector]=d;
 	d = strtod(tmp.c_str(), NULL);
 	ROS_INFO("%f",d);
+	ROS_INFO("%i",selector);
+	ROS_INFO("%f",goals[i][selector]);
 	i++;
         selector++;
     }
 
-
     ROS_INFO("Finished Reading CSV File");
+
 
   double goalX,goalY,goalW;
   for (int i =0; i <10;i++){
-	  goalX = i;
-	  goalY = i;
-	  goalW = 1.0;
+	  goalX = goals[i][0];
+	  goalY = goals[i][1];
+	  goalW = goals[i][2];
 	  //we'll send a goal to the robot to move 1 meter forward
 	  goal.target_pose.header.frame_id = "map";
 	  goal.target_pose.header.stamp = ros::Time::now();
