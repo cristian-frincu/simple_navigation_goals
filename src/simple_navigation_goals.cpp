@@ -3,6 +3,31 @@
 #include <actionlib/client/simple_action_client.h>
 #include <nav_msgs/Odometry.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+#include <list>
+
+
+using namespace std;
+
+void split_line(string& line, string delim, list<string>& values)
+{
+    size_t pos = 0;
+    while ((pos = line.find(delim, (pos + 1))) != string::npos) {
+        string p = line.substr(0, pos);
+        values.push_back(p);
+        line = line.substr(pos + 1);
+    }
+
+    if (!line.empty()) {
+        values.push_back(line);
+    }
+}
+
+
+
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 
@@ -20,6 +45,35 @@ int main(int argc, char** argv){
   }
 
   move_base_msgs::MoveBaseGoal goal;
+
+
+
+    ROS_INFO("Reading CSV File");
+ifstream file ( "file.csv" );
+ string value;
+    list<string> values;
+    while ( file.good() )
+    {
+        getline ( file, value, ',' ); // read a string until next comma: http://www.cplusplus.com/reference/string/getline/
+        if (value.find('\n') != string::npos) {
+            split_line(value, "\n", values);
+        } else {
+            values.push_back(value);
+        }
+    }
+
+    list<string>::const_iterator it = values.begin();
+    int selector=0;
+    for (it = values.begin(); it != values.end(); it++) {
+        string tmp = *it;
+        selector++;
+        double d;
+        d = strtod(tmp.c_str(), NULL);
+	ROS_INFO("%f",d);
+    }
+
+
+    ROS_INFO("Finished Reading CSV File");
 
   double goalX,goalY,goalW;
   for (int i =0; i <10;i++){
