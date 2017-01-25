@@ -48,7 +48,9 @@ int main(int argc, char** argv){
 
 
     ROS_INFO("Reading CSV File");
-    double goals[10][3];
+    double goalsX[10];
+    double goalsY[10];
+    double goalsW[10];
 	
     ifstream file ( "file.csv" );
     string value;
@@ -66,27 +68,47 @@ int main(int argc, char** argv){
     list<string>::const_iterator it = values.begin();
     int selector=0;
     int i =0;
+    int absIndex=0; //An index that keeeps trackof how many points were actually inputed
     for (it = values.begin(); it != values.end(); it++) {
         string tmp = *it;
 	selector = selector % 3;
         double d;
-        goals[i][selector]=d;
 	d = strtod(tmp.c_str(), NULL);
-	ROS_INFO("%f",d);
-	ROS_INFO("%i",selector);
-	ROS_INFO("%f",goals[i][selector]);
+	
+	switch(selector){
+	case 0:
+		ROS_INFO("X:%f",d);
+		goalsX[absIndex] = d;
+		break;
+	case 1: 
+		ROS_INFO("Y:%f",d);
+		goalsY[absIndex] = d;
+		break;
+	case 2:
+		ROS_INFO("W:%f",d);
+		goalsW[absIndex] = d;
+		absIndex++;
+		break;
+	}
 	i++;
         selector++;
     }
 
     ROS_INFO("Finished Reading CSV File");
+for (int i =0;i<10;i++){
+	ROS_INFO("%f",goalsX[i]);
+}
 
+	ROS_INFO("Y:");
+for (int i =0;i<10;i++){
+	ROS_INFO("%f",goalsY[i]);
+}
 
   double goalX,goalY,goalW;
-  for (int i =0; i <10;i++){
-	  goalX = goals[i][0];
-	  goalY = goals[i][1];
-	  goalW = goals[i][2];
+  for (int j =0; j <10;j++){
+	  goalX = goalsX[j];
+	  goalY = goalsY[j];
+	  goalW = goalsW[j];
 	  //we'll send a goal to the robot to move 1 meter forward
 	  goal.target_pose.header.frame_id = "map";
 	  goal.target_pose.header.stamp = ros::Time::now();
