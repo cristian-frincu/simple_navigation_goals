@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <list>
 
+#define MAX_POINTS 25
 
 using namespace std;
 
@@ -48,9 +49,9 @@ int main(int argc, char** argv){
 
 
     ROS_INFO("Reading CSV File");
-    double goalsX[10];
-    double goalsY[10];
-    double goalsW[10];
+    double goalsX[MAX_POINTS];
+    double goalsY[MAX_POINTS];
+    double goalsW[MAX_POINTS];
 	
     ifstream file ( "file.csv" );
     string value;
@@ -77,15 +78,12 @@ int main(int argc, char** argv){
 	
 	switch(selector){
 	case 0:
-		ROS_INFO("X:%f",d);
 		goalsX[absIndex] = d;
 		break;
 	case 1: 
-		ROS_INFO("Y:%f",d);
 		goalsY[absIndex] = d;
 		break;
 	case 2:
-		ROS_INFO("W:%f",d);
 		goalsW[absIndex] = d;
 		absIndex++;
 		break;
@@ -95,17 +93,9 @@ int main(int argc, char** argv){
     }
 
     ROS_INFO("Finished Reading CSV File");
-for (int i =0;i<10;i++){
-	ROS_INFO("%f",goalsX[i]);
-}
-
-	ROS_INFO("Y:");
-for (int i =0;i<10;i++){
-	ROS_INFO("%f",goalsY[i]);
-}
 
   double goalX,goalY,goalW;
-  for (int j =0; j <10;j++){
+  for (int j =0; j <MAX_POINTS ;j++){
 	  goalX = goalsX[j];
 	  goalY = goalsY[j];
 	  goalW = goalsW[j];
