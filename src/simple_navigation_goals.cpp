@@ -9,6 +9,8 @@
 #include <cstdlib>
 #include <list>
 
+#include <ctime>
+
 #define MAX_POINTS 25
 
 using namespace std;
@@ -29,7 +31,7 @@ void split_line(string& line, string delim, list<string>& values)
 
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
-
+unsigned int start;
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "simple_navigation_goals");
@@ -109,14 +111,20 @@ int main(int argc, char** argv){
 
 	  ROS_INFO("Sending goal, (%f,%f,%f)",goalX,goalY,goalW);
 	  ac.sendGoal(goal);
+	  start = clock();
 
 	  ac.waitForResult();
 
-	  if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+	  if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED){
 	    ROS_INFO("Hooray, reached point");
+	    ROS_INFO("Time Taken:%lu",clock()-start);
+	    cin.ignore();
+	    cin.ignore();
+	}	
 	  else{
 	    ROS_INFO("The robot failed to go to %f,%f,%f",goalX,goalY,goalW);
 	    ROS_INFO("Going to next point");
+	    ROS_INFO("Time Taken:%lu",clock()-start);
 	  }	
   }
 
