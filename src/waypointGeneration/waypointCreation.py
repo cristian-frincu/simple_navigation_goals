@@ -1,14 +1,14 @@
 import math
 
 
-DENSITY = 0.5 #meter/sample
+DENSITY = 1 #samples/meter
 f = file ("waypointNodes.csv","r")
 rawNodes = f.readlines()
 f.close()
 
 nodes=[]
 for i in rawNodes:
-	print i
+	#print i
 	nodes.append([float(i.split(",")[0]), float(i.split(",")[1])])
 
 
@@ -22,24 +22,25 @@ lastNode = nodes[0]
 nodes.pop(0)
 nodes.append(lastNode)
 
-f = file ("waypoint.csv","a+")
+f = file ("file.csv","a+")
 
-for i in nodes:
-	##Characteristics of the line that connects the nodes
-	m = (i[1]- lastNode[1])/(i[0]-lastNode[0])
-	b = i[1] - m*i[0]
-	#print m,b
-	dist = math.sqrt((i[0]-lastNode[0])**2+(i[1]-lastNode[1])**2)
-	#print dist
-	numOfWaypoints = int(dist / DENSITY)
-	#print int(numOfWaypoints)
-	orientation = math.atan((lastNode[1]-i[1])/(lastNode[0]-i[0]))
-	##Generating waypoints to connect the waypoints
-	for point in range(numOfWaypoints):
-		y = m*(point*DENSITY) + b 
-		print lastNode[0]+point*DENSITY, y+lastNode[1],orientation
-		f.write(str(lastNode[0]+point*DENSITY)+","+str(y+lastNode[1])+str(orientation)+"\n")
-	lastNode = i
-	print '----'
+for currentNode in nodes:
+	diffX = currentNode[0] - lastNode[0]
+	diffY = currentNode[1] - lastNode[1]
+	vertexLength = math.sqrt(diffX**2 + diffY**2)
+	
+	numberOfSubVertices = int(DENSITY * vertexLength)
+	subVertexLengthX = diffX / numberOfSubVertices
+	subVertexLengthY = diffY / numberOfSubVertices
+	
+	headingAngle = math.atan(diffY / diffX)
 
+		
+	for i in range(numberOfSubVertices):
+		xi = lastNode[0] + subVertexLengthX*i	
+		yi = lastNode[1] + subVertexLengthY*i	
+		f.write(str(xi)+","+str(yi)+","+str(headingAngle)+"\n")
+		print xi,yi,headingAngle
+
+	lastNode = currentNode
 f.close()
