@@ -1,4 +1,7 @@
 # simple_navigation_goals
+
+# Obsolete please use: https://github.com/cristian-frincu/navigation_waypoints_scripts
+
 A ROS node that will take as input a CSV file with coordinates, and go to each one consecutively.
 
 #To run:
